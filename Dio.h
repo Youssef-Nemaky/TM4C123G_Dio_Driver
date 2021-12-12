@@ -156,17 +156,17 @@ typedef struct
 
 typedef struct
 {
-	/* Member contains the ID of the Port that this channel belongs to */
-	Dio_PortType Port_Num;
-	/* Member contains the ID of the Channel*/
-	Dio_ChannelType Ch_Num;
+    /* Member contains the ID of the Port that this channel belongs to */
+    Dio_PortType Port_Num;
+    /* Member contains the ID of the Channel*/
+    Dio_ChannelType Ch_Num;
 }Dio_ConfigChannel;
 
 /* Data Structure required for initializing the Dio Driver */
 typedef struct Dio_ConfigType
 {
-	Dio_ConfigChannel Channels[DIO_CONFIGURED_CHANNLES];
-	Dio_ChannelGroupType GroupChannels[DIO_CONFIGURED_GROUP_CHANNELS];
+    Dio_ConfigChannel Channels[DIO_CONFIGURED_CHANNLES];
+    Dio_ChannelGroupType GroupChannels[DIO_CONFIGURED_GROUP_CHANNELS];
 } Dio_ConfigType;
 
 /*******************************************************************************

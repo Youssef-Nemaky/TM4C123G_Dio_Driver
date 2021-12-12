@@ -41,11 +41,11 @@
 
 /* PB structure used with Dio_Init API */
 const Dio_ConfigType Dio_Configuration = {
-							/* Normal Channels - Port Number, Channel Number */
+                            /* Normal Channels - Port Number, Channel Number */
                             DioConf_LED1_PORT_NUM,DioConf_LED1_CHANNEL_NUM,
-				            DioConf_SW1_PORT_NUM,DioConf_SW1_CHANNEL_NUM,
+                            DioConf_SW1_PORT_NUM,DioConf_SW1_CHANNEL_NUM,
 
-							/* Channel Groups - Mask, Offset, Port Number */
-							DioConf_LCD_GRP_MASK, DioConf_LCD_GRP_OFFSET, DioConf_LCD_GRP_PORT_NUM
-				         };
-
+                            /* Channel Groups - Mask, Offset, Port Number */
+                            DioConf_LCD_GRP_MASK, DioConf_LCD_GRP_OFFSET, DioConf_LCD_GRP_PORT_NUM
+                         };
+                         

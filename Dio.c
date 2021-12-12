@@ -42,23 +42,23 @@ STATIC uint8 Dio_Status = DIO_NOT_INITIALIZED;
 void Dio_Init(const Dio_ConfigType * ConfigPtr)
 {
 #if (DIO_DEV_ERROR_DETECT == STD_ON)
-	/* check if the input configuration pointer is not a NULL_PTR */
-	if (NULL_PTR == ConfigPtr)
-	{
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_INIT_SID,
-		     DIO_E_PARAM_CONFIG);
-	}
-	else
+    /* check if the input configuration pointer is not a NULL_PTR */
+    if (NULL_PTR == ConfigPtr)
+    {
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID, DIO_INIT_SID,
+             DIO_E_PARAM_CONFIG);
+    }
+    else
 #endif
-	{
-		/*
-		 * Set the module state to initialized and point to the PB configuration structure using a global pointer.
-		 * This global pointer is global to be used by other functions to read the PB configuration structures
-		 */
-		Dio_Status       = DIO_INITIALIZED;
-		Dio_PortChannels = ConfigPtr->Channels; /* address of the first Channels structure --> Channels[0] */
-		Dio_GroupChannels = ConfigPtr->GroupChannels; /* adress of the first group channels structures --> GroupChannels[0] */
-	}
+    {
+        /*
+         * Set the module state to initialized and point to the PB configuration structure using a global pointer.
+         * This global pointer is global to be used by other functions to read the PB configuration structures
+         */
+        Dio_Status       = DIO_INITIALIZED;
+        Dio_PortChannels = ConfigPtr->Channels; /* address of the first Channels structure --> Channels[0] */
+        Dio_GroupChannels = ConfigPtr->GroupChannels; /* adress of the first group channels structures --> GroupChannels[0] */
+    }
 }
 
 /************************************************************************************
@@ -75,69 +75,69 @@ void Dio_Init(const Dio_ConfigType * ConfigPtr)
 ************************************************************************************/
 void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
 {
-	volatile uint32 * Port_Ptr = NULL_PTR;
-	boolean error = FALSE;
+    volatile uint32 * Port_Ptr = NULL_PTR;
+    boolean error = FALSE;
 
 #if (DIO_DEV_ERROR_DETECT == STD_ON)
-	/* Check if the Driver is initialized before using this function */
-	if (DIO_NOT_INITIALIZED == Dio_Status)
-	{
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_WRITE_CHANNEL_SID, DIO_E_UNINIT);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
-	/* Check if the used channel is within the valid range */
-	if (DIO_CONFIGURED_CHANNLES <= ChannelId)
-	{
+    /* Check if the Driver is initialized before using this function */
+    if (DIO_NOT_INITIALIZED == Dio_Status)
+    {
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_WRITE_CHANNEL_SID, DIO_E_UNINIT);
+        error = TRUE;
+    }
+    else
+    {
+        /* No Action Required */
+    }
+    /* Check if the used channel is within the valid range */
+    if (DIO_CONFIGURED_CHANNLES <= ChannelId)
+    {
 
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_WRITE_CHANNEL_SID, DIO_E_PARAM_INVALID_CHANNEL_ID);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_WRITE_CHANNEL_SID, DIO_E_PARAM_INVALID_CHANNEL_ID);
+        error = TRUE;
+    }
+    else
+    {
+        /* No Action Required */
+    }
 #endif
 
-	/* In-case there are no errors */
-	if(FALSE == error)
-	{
-		/* Point to the correct PORT register according to the Port Id stored in the Port_Num member */
-		switch(Dio_PortChannels[ChannelId].Port_Num)
-		{
+    /* In-case there are no errors */
+    if(FALSE == error)
+    {
+        /* Point to the correct PORT register according to the Port Id stored in the Port_Num member */
+        switch(Dio_PortChannels[ChannelId].Port_Num)
+        {
             case GPIO_PORTA_ID:    Port_Ptr = &GPIO_PORTA_DATA_REG;
-		    break;
-		    case GPIO_PORTB_ID:    Port_Ptr = &GPIO_PORTB_DATA_REG;
-		    break;
-		    case GPIO_PORTC_ID:    Port_Ptr = &GPIO_PORTC_DATA_REG;
-		    break;
-		    case GPIO_PORTD_ID:    Port_Ptr = &GPIO_PORTD_DATA_REG;
+            break;
+            case GPIO_PORTB_ID:    Port_Ptr = &GPIO_PORTB_DATA_REG;
+            break;
+            case GPIO_PORTC_ID:    Port_Ptr = &GPIO_PORTC_DATA_REG;
+            break;
+            case GPIO_PORTD_ID:    Port_Ptr = &GPIO_PORTD_DATA_REG;
             break;
             case GPIO_PORTE_ID:    Port_Ptr = &GPIO_PORTE_DATA_REG;
-		    break;
+            break;
             case GPIO_PORTF_ID:    Port_Ptr = &GPIO_PORTF_DATA_REG;
-		    break;
-		}
-		if(Level == STD_HIGH)
-		{
-			/* Write Logic High */
-			SET_BIT(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num);
-		}
-		else if(Level == STD_LOW)
-		{
-			/* Write Logic Low */
-			CLEAR_BIT(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num);
-		}
-	}
-	else
-	{
-		/* No Action Required */
-	}
+            break;
+        }
+        if(Level == STD_HIGH)
+        {
+            /* Write Logic High */
+            SET_BIT(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num);
+        }
+        else if(Level == STD_LOW)
+        {
+            /* Write Logic Low */
+            CLEAR_BIT(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num);
+        }
+    }
+    else
+    {
+        /* No Action Required */
+    }
 
 }
 
@@ -154,34 +154,34 @@ void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
 ************************************************************************************/
 Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
 {
-	volatile uint32 * Port_Ptr = NULL_PTR;
-	Dio_LevelType output = STD_LOW;
-	boolean error = FALSE;
+    volatile uint32 * Port_Ptr = NULL_PTR;
+    Dio_LevelType output = STD_LOW;
+    boolean error = FALSE;
 
 #if (DIO_DEV_ERROR_DETECT == STD_ON)
-	/* Check if the Driver is initialized before using this function */
-	if (DIO_NOT_INITIALIZED == Dio_Status)
-	{
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_READ_CHANNEL_SID, DIO_E_UNINIT);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
-	/* Check if the used channel is within the valid range */
-	if (DIO_CONFIGURED_CHANNLES <= ChannelId)
-	{
+    /* Check if the Driver is initialized before using this function */
+    if (DIO_NOT_INITIALIZED == Dio_Status)
+    {
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_READ_CHANNEL_SID, DIO_E_UNINIT);
+        error = TRUE;
+    }
+    else
+    {
+        /* No Action Required */
+    }
+    /* Check if the used channel is within the valid range */
+    if (DIO_CONFIGURED_CHANNLES <= ChannelId)
+    {
 
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_READ_CHANNEL_SID, DIO_E_PARAM_INVALID_CHANNEL_ID);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_READ_CHANNEL_SID, DIO_E_PARAM_INVALID_CHANNEL_ID);
+        error = TRUE;
+    }
+    else
+    {
+        /* No Action Required */
+    }
 #endif
     if(FALSE == error){
         switch (Dio_PortChannels[ChannelId].Port_Num)
@@ -202,39 +202,39 @@ Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
 
         }
     }
-	/* In-case there are no errors */
-	if(FALSE == error)
-	{
-		/* Point to the correct PORT register according to the Port Id stored in the Port_Num member */
-		switch(Dio_PortChannels[ChannelId].Port_Num)
-		{
+    /* In-case there are no errors */
+    if(FALSE == error)
+    {
+        /* Point to the correct PORT register according to the Port Id stored in the Port_Num member */
+        switch(Dio_PortChannels[ChannelId].Port_Num)
+        {
             case GPIO_PORTA_ID:    Port_Ptr = &GPIO_PORTA_DATA_REG;
-		    break;
-		    case GPIO_PORTB_ID:    Port_Ptr = &GPIO_PORTB_DATA_REG;
-		    break;
-		    case GPIO_PORTC_ID:    Port_Ptr = &GPIO_PORTC_DATA_REG;
-		    break;
-		    case GPIO_PORTD_ID:    Port_Ptr = &GPIO_PORTD_DATA_REG;
+            break;
+            case GPIO_PORTB_ID:    Port_Ptr = &GPIO_PORTB_DATA_REG;
+            break;
+            case GPIO_PORTC_ID:    Port_Ptr = &GPIO_PORTC_DATA_REG;
+            break;
+            case GPIO_PORTD_ID:    Port_Ptr = &GPIO_PORTD_DATA_REG;
             break;
             case GPIO_PORTE_ID:    Port_Ptr = &GPIO_PORTE_DATA_REG;
-		    break;
+            break;
             case GPIO_PORTF_ID:    Port_Ptr = &GPIO_PORTF_DATA_REG;
-		    break;
-		}
-		/* Read the required channel */
-		if(IS_BIT_SET(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num))
-		{
-			output = STD_HIGH;
-		}
-		else
-		{
-			output = STD_LOW;
-		}
-	}
-	else
-	{
-		/* No Action Required */
-	}
+            break;
+        }
+        /* Read the required channel */
+        if(IS_BIT_SET(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num))
+        {
+            output = STD_HIGH;
+        }
+        else
+        {
+            output = STD_LOW;
+        }
+    }
+    else
+    {
+        /* No Action Required */
+    }
         return output;
 }
 
@@ -253,27 +253,27 @@ Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId)
 void Dio_GetVersionInfo(Std_VersionInfoType *versioninfo)
 {
 #if (DIO_DEV_ERROR_DETECT == STD_ON)
-	/* Check if input pointer is not Null pointer */
-	if(NULL_PTR == versioninfo)
-	{
-		/* Report to DET  */
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_GET_VERSION_INFO_SID, DIO_E_PARAM_POINTER);
-	}
-	else
+    /* Check if input pointer is not Null pointer */
+    if(NULL_PTR == versioninfo)
+    {
+        /* Report to DET  */
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_GET_VERSION_INFO_SID, DIO_E_PARAM_POINTER);
+    }
+    else
 #endif /* (DIO_DEV_ERROR_DETECT == STD_ON) */
-	{
-		/* Copy the vendor Id */
-		versioninfo->vendorID = (uint16)DIO_VENDOR_ID;
-		/* Copy the module Id */
-		versioninfo->moduleID = (uint16)DIO_MODULE_ID;
-		/* Copy Software Major Version */
-		versioninfo->sw_major_version = (uint8)DIO_SW_MAJOR_VERSION;
-		/* Copy Software Minor Version */
-		versioninfo->sw_minor_version = (uint8)DIO_SW_MINOR_VERSION;
-		/* Copy Software Patch Version */
-		versioninfo->sw_patch_version = (uint8)DIO_SW_PATCH_VERSION;
-	}
+    {
+        /* Copy the vendor Id */
+        versioninfo->vendorID = (uint16)DIO_VENDOR_ID;
+        /* Copy the module Id */
+        versioninfo->moduleID = (uint16)DIO_MODULE_ID;
+        /* Copy Software Major Version */
+        versioninfo->sw_major_version = (uint8)DIO_SW_MAJOR_VERSION;
+        /* Copy Software Minor Version */
+        versioninfo->sw_minor_version = (uint8)DIO_SW_MINOR_VERSION;
+        /* Copy Software Patch Version */
+        versioninfo->sw_patch_version = (uint8)DIO_SW_PATCH_VERSION;
+    }
 }
 #endif
 
@@ -291,71 +291,71 @@ void Dio_GetVersionInfo(Std_VersionInfoType *versioninfo)
 #if (DIO_FLIP_CHANNEL_API == STD_ON)
 Dio_LevelType Dio_FlipChannel(Dio_ChannelType ChannelId)
 {
-	volatile uint32 * Port_Ptr = NULL_PTR;
-	Dio_LevelType output = STD_LOW;
-	boolean error = FALSE;
+    volatile uint32 * Port_Ptr = NULL_PTR;
+    Dio_LevelType output = STD_LOW;
+    boolean error = FALSE;
 
 #if (DIO_DEV_ERROR_DETECT == STD_ON)
-	/* Check if the Driver is initialized before using this function */
-	if (DIO_NOT_INITIALIZED == Dio_Status)
-	{
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_FLIP_CHANNEL_SID, DIO_E_UNINIT);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
-	/* Check if the used channel is within the valid range */
-	if (DIO_CONFIGURED_CHANNLES <= ChannelId)
-	{
+    /* Check if the Driver is initialized before using this function */
+    if (DIO_NOT_INITIALIZED == Dio_Status)
+    {
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_FLIP_CHANNEL_SID, DIO_E_UNINIT);
+        error = TRUE;
+    }
+    else
+    {
+        /* No Action Required */
+    }
+    /* Check if the used channel is within the valid range */
+    if (DIO_CONFIGURED_CHANNLES <= ChannelId)
+    {
 
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_FLIP_CHANNEL_SID, DIO_E_PARAM_INVALID_CHANNEL_ID);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_FLIP_CHANNEL_SID, DIO_E_PARAM_INVALID_CHANNEL_ID);
+        error = TRUE;
+    }
+    else
+    {
+        /* No Action Required */
+    }
 #endif
 
-	/* In-case there are no errors */
-	if(FALSE == error)
-	{
-		/* Point to the correct PORT register according to the Port Id stored in the Port_Num member */
-		switch(Dio_PortChannels[ChannelId].Port_Num)
-		{
+    /* In-case there are no errors */
+    if(FALSE == error)
+    {
+        /* Point to the correct PORT register according to the Port Id stored in the Port_Num member */
+        switch(Dio_PortChannels[ChannelId].Port_Num)
+        {
                     case 0:    Port_Ptr = &GPIO_PORTA_DATA_REG;
-		               break;
-		    case 1:    Port_Ptr = &GPIO_PORTB_DATA_REG;
-		               break;
-		    case 2:    Port_Ptr = &GPIO_PORTC_DATA_REG;
-		               break;
-		    case 3:    Port_Ptr = &GPIO_PORTD_DATA_REG;
-		               break;
+                       break;
+            case 1:    Port_Ptr = &GPIO_PORTB_DATA_REG;
+                       break;
+            case 2:    Port_Ptr = &GPIO_PORTC_DATA_REG;
+                       break;
+            case 3:    Port_Ptr = &GPIO_PORTD_DATA_REG;
+                       break;
                     case 4:    Port_Ptr = &GPIO_PORTE_DATA_REG;
-		               break;
+                       break;
                     case 5:    Port_Ptr = &GPIO_PORTF_DATA_REG;
-		               break;
-		}
-		/* Read the required channel and write the required level */
-		if(IS_BIT_SET(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num))
-		{
-			CLEAR_BIT(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num);
-			output = STD_LOW;
-		}
-		else
-		{
-			SET_BIT(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num);
-			output = STD_HIGH;
-		}
-	}
-	else
-	{
-		/* No Action Required */
-	}
+                       break;
+        }
+        /* Read the required channel and write the required level */
+        if(IS_BIT_SET(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num))
+        {
+            CLEAR_BIT(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num);
+            output = STD_LOW;
+        }
+        else
+        {
+            SET_BIT(*Port_Ptr,Dio_PortChannels[ChannelId].Ch_Num);
+            output = STD_HIGH;
+        }
+    }
+    else
+    {
+        /* No Action Required */
+    }
         return output;
 }
 #endif
@@ -372,70 +372,70 @@ Dio_LevelType Dio_FlipChannel(Dio_ChannelType ChannelId)
 * Description: Function to read a subset of the adjoining bits of a port.
 ************************************************************************************/
 Dio_PortLevelType Dio_ReadChannelGroup(const Dio_ChannelGroupType * ChannelGroupIdPtr){
-	volatile uint32 * Port_Ptr;
-	boolean error = FALSE;
+    volatile uint32 * Port_Ptr;
+    boolean error = FALSE;
 
 #if (DIO_DEV_ERROR_DETECT == STD_ON)
-	/* Check if the Driver is initialized before using this function */
-	if (DIO_NOT_INITIALIZED == Dio_Status)
-	{
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_FLIP_CHANNEL_SID, DIO_E_UNINIT);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
+    /* Check if the Driver is initialized before using this function */
+    if (DIO_NOT_INITIALIZED == Dio_Status)
+    {
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_FLIP_CHANNEL_SID, DIO_E_UNINIT);
+        error = TRUE;
+    }
+    else
+    {
+        /* No Action Required */
+    }
 
-	/* check if the input configuration pointer is not a NULL_PTR */
-	if(NULL_PTR == ChannelGroupIdPtr){
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_POINTER);
-		error = TRUE;	
-	}
-	else
-	{
-		/* No Action Required */
-	}
+    /* check if the input configuration pointer is not a NULL_PTR */
+    if(NULL_PTR == ChannelGroupIdPtr){
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_POINTER);
+        error = TRUE;	
+    }
+    else
+    {
+        /* No Action Required */
+    }
 
-	if((ChannelGroupIdPtr >= Dio_GroupChannels) && (ChannelGroupIdPtr <= (Dio_GroupChannels + DIO_CONFIGURED_GROUP_CHANNELS))){
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_INVALID_GROUP);
-		error = TRUE;
-	}
-	else 
-	{
-		/* No Action Required */
-	}
+    if((ChannelGroupIdPtr >= Dio_GroupChannels) && (ChannelGroupIdPtr <= (Dio_GroupChannels + DIO_CONFIGURED_GROUP_CHANNELS))){
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_INVALID_GROUP);
+        error = TRUE;
+    }
+    else 
+    {
+        /* No Action Required */
+    }
 #endif
 
-	/* In case there are no errors */
-	if(FALSE == error){
-		switch (ChannelGroupIdPtr->PortIndex)
-		{
-		case GPIO_PORTA_ID: Port_Ptr = &GPIO_PORTA_DATA_REG;
-			break;
-		case GPIO_PORTB_ID: Port_Ptr = &GPIO_PORTB_DATA_REG;
-			break;
-		case GPIO_PORTC_ID: Port_Ptr = &GPIO_PORTC_DATA_REG;
-			break;
-		case GPIO_PORTD_ID: Port_Ptr = &GPIO_PORTD_DATA_REG;
-			break;
-		case GPIO_PORTE_ID: Port_Ptr = &GPIO_PORTE_DATA_REG;
-			break;
-		case GPIO_PORTF_ID: Port_Ptr = &GPIO_PORTF_DATA_REG;
-			break;
-		}
+    /* In case there are no errors */
+    if(FALSE == error){
+        switch (ChannelGroupIdPtr->PortIndex)
+        {
+        case GPIO_PORTA_ID: Port_Ptr = &GPIO_PORTA_DATA_REG;
+            break;
+        case GPIO_PORTB_ID: Port_Ptr = &GPIO_PORTB_DATA_REG;
+            break;
+        case GPIO_PORTC_ID: Port_Ptr = &GPIO_PORTC_DATA_REG;
+            break;
+        case GPIO_PORTD_ID: Port_Ptr = &GPIO_PORTD_DATA_REG;
+            break;
+        case GPIO_PORTE_ID: Port_Ptr = &GPIO_PORTE_DATA_REG;
+            break;
+        case GPIO_PORTF_ID: Port_Ptr = &GPIO_PORTF_DATA_REG;
+            break;
+        }
 
 
-		/* Read the port value, mask it so you get the group channels you want and then shift them by the offset to the right */
-		return (((*Port_Ptr) & (ChannelGroupIdPtr->mask))>>(ChannelGroupIdPtr->offset));
-	}
-	else
-	{
-		return STD_LOW; /* because there was an error */
-	}
+        /* Read the port value, mask it so you get the group channels you want and then shift them by the offset to the right */
+        return (((*Port_Ptr) & (ChannelGroupIdPtr->mask))>>(ChannelGroupIdPtr->offset));
+    }
+    else
+    {
+        return STD_LOW; /* because there was an error */
+    }
 }
 
 /************************************************************************************
@@ -451,67 +451,67 @@ Dio_PortLevelType Dio_ReadChannelGroup(const Dio_ChannelGroupType * ChannelGroup
 * Description: Function to set a subset of the adjoining bits of a port to a specified level.
 ************************************************************************************/
 void Dio_WriteChannelGroup(const Dio_ChannelGroupType * ChannelGroupIdPtr, Dio_PortLevelType Level){
-	volatile uint32 * Port_Ptr;
-	boolean error = FALSE;
+    volatile uint32 * Port_Ptr;
+    boolean error = FALSE;
 
 #if (DIO_DEV_ERROR_DETECT == STD_ON)
-	/* Check if the Driver is initialized before using this function */
-	if (DIO_NOT_INITIALIZED == Dio_Status)
-	{
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_FLIP_CHANNEL_SID, DIO_E_UNINIT);
-		error = TRUE;
-	}
-	else
-	{
-		/* No Action Required */
-	}
+    /* Check if the Driver is initialized before using this function */
+    if (DIO_NOT_INITIALIZED == Dio_Status)
+    {
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_FLIP_CHANNEL_SID, DIO_E_UNINIT);
+        error = TRUE;
+    }
+    else
+    {
+        /* No Action Required */
+    }
 
-	/* check if the input configuration pointer is not a NULL_PTR */
-	if(NULL_PTR == ChannelGroupIdPtr){
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_POINTER);
-		error = TRUE;	
-	}
-	else
-	{
-		/* No Action Required */
-	}
+    /* check if the input configuration pointer is not a NULL_PTR */
+    if(NULL_PTR == ChannelGroupIdPtr){
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_POINTER);
+        error = TRUE;	
+    }
+    else
+    {
+        /* No Action Required */
+    }
 
-	if((ChannelGroupIdPtr >= Dio_GroupChannels) && (ChannelGroupIdPtr <= (Dio_GroupChannels + DIO_CONFIGURED_GROUP_CHANNELS))){
-		Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
-				DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_INVALID_GROUP);
-		error = TRUE;
-	}
-	else 
-	{
-		/* No Action Required */
-	}
+    if((ChannelGroupIdPtr >= Dio_GroupChannels) && (ChannelGroupIdPtr <= (Dio_GroupChannels + DIO_CONFIGURED_GROUP_CHANNELS))){
+        Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
+                DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_INVALID_GROUP);
+        error = TRUE;
+    }
+    else 
+    {
+        /* No Action Required */
+    }
 #endif
 
-	/* In case there are no errors */
-	if(FALSE == error){
-		switch (ChannelGroupIdPtr->PortIndex)
-		{
-		case GPIO_PORTA_ID: Port_Ptr = &GPIO_PORTA_DATA_REG;
-			break;
-		case GPIO_PORTB_ID: Port_Ptr = &GPIO_PORTB_DATA_REG;
-			break;
-		case GPIO_PORTC_ID: Port_Ptr = &GPIO_PORTC_DATA_REG;
-			break;
-		case GPIO_PORTD_ID: Port_Ptr = &GPIO_PORTD_DATA_REG;
-			break;
-		case GPIO_PORTE_ID: Port_Ptr = &GPIO_PORTE_DATA_REG;
-			break;
-		case GPIO_PORTF_ID: Port_Ptr = &GPIO_PORTF_DATA_REG;
-			break;
-		}
+    /* In case there are no errors */
+    if(FALSE == error){
+        switch (ChannelGroupIdPtr->PortIndex)
+        {
+        case GPIO_PORTA_ID: Port_Ptr = &GPIO_PORTA_DATA_REG;
+            break;
+        case GPIO_PORTB_ID: Port_Ptr = &GPIO_PORTB_DATA_REG;
+            break;
+        case GPIO_PORTC_ID: Port_Ptr = &GPIO_PORTC_DATA_REG;
+            break;
+        case GPIO_PORTD_ID: Port_Ptr = &GPIO_PORTD_DATA_REG;
+            break;
+        case GPIO_PORTE_ID: Port_Ptr = &GPIO_PORTE_DATA_REG;
+            break;
+        case GPIO_PORTF_ID: Port_Ptr = &GPIO_PORTF_DATA_REG;
+            break;
+        }
 
-		*Port_Ptr = ((*Port_Ptr) & ~(ChannelGroupIdPtr->mask)) | ((Level<<(ChannelGroupIdPtr->offset)) & (ChannelGroupIdPtr->mask));
-	}
-	else
-	{
-		/* No Action Required */
-	}
+        *Port_Ptr = ((*Port_Ptr) & ~(ChannelGroupIdPtr->mask)) | ((Level<<(ChannelGroupIdPtr->offset)) & (ChannelGroupIdPtr->mask));
+    }
+    else
+    {
+        /* No Action Required */
+    }
 }
 
