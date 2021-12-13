@@ -198,6 +198,11 @@ Dio_LevelType Dio_FlipChannel(Dio_ChannelType ChannelId);
 void Dio_GetVersionInfo(Std_VersionInfoType *versioninfo);
 #endif
 
+/* Function Prototype for DIO Read Channel Group */
+Dio_PortLevelType Dio_ReadChannelGroup(const Dio_ChannelGroupType * ChannelGroupIdPtr);
+
+/* Function Prototype for DIO Write Channel Group */
+void Dio_WriteChannelGroup(const Dio_ChannelGroupType * ChannelGroupIdPtr, Dio_PortLevelType Level);
 
 
 /*******************************************************************************
