@@ -170,33 +170,35 @@ typedef struct Dio_ConfigType
 } Dio_ConfigType;
 
 /*******************************************************************************
- *                      Function Prototypes                                    *
+ *                          Function Prototypes                                *
  *******************************************************************************/
 
-/* Function for DIO read Channel API */
+/* Function Prototype for DIO read Channel API */
 Dio_PortLevelType Dio_ReadPort(Dio_PortType PortId);
 
-/* Function for DIO write Channel API */
+/* Function Prototype for DIO write Channel API */
 void Dio_WritePort(Dio_PortType PortId, Dio_PortLevelType Level);
 
-/* Function for DIO read Port API */
+/* Function Prototype for DIO read Port API */
 Dio_LevelType Dio_ReadChannel(Dio_ChannelType ChannelId);
 
-/* Function for DIO write Port API */
+/* Function Prototype for DIO write Port API */
 void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level);
 
-/* Function for DIO Initialization API */
+/* Function Prototype for DIO Initialization API */
 void Dio_Init(const Dio_ConfigType * ConfigPtr);
 
 #if (DIO_FLIP_CHANNEL_API == STD_ON)
-/* Function for DIO flip channel API */
+/* Function Prototype for DIO flip channel API */
 Dio_LevelType Dio_FlipChannel(Dio_ChannelType ChannelId);
 #endif
 
-/* Function for DIO Get Version Info API */
+/* Function Prototype for DIO Get Version Info API */
 #if (DIO_VERSION_INFO_API == STD_ON)
 void Dio_GetVersionInfo(Std_VersionInfoType *versioninfo);
 #endif
+
+
 
 /*******************************************************************************
  *                       External Variables                                    *
