@@ -399,7 +399,7 @@ Dio_PortLevelType Dio_ReadChannelGroup(const Dio_ChannelGroupType * ChannelGroup
         /* No Action Required */
     }
 
-    if((ChannelGroupIdPtr >= Dio_GroupChannels) && (ChannelGroupIdPtr <= (Dio_GroupChannels + DIO_CONFIGURED_GROUP_CHANNELS))){
+    if((ChannelGroupIdPtr < Dio_GroupChannels) && (ChannelGroupIdPtr > (Dio_GroupChannels + DIO_CONFIGURED_GROUP_CHANNELS))){
         Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
                 DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_INVALID_GROUP);
         error = TRUE;
@@ -477,8 +477,8 @@ void Dio_WriteChannelGroup(const Dio_ChannelGroupType * ChannelGroupIdPtr, Dio_P
     {
         /* No Action Required */
     }
-
-    if((ChannelGroupIdPtr >= Dio_GroupChannels) && (ChannelGroupIdPtr <= (Dio_GroupChannels + DIO_CONFIGURED_GROUP_CHANNELS))){
+    
+    if((ChannelGroupIdPtr < Dio_GroupChannels) || (ChannelGroupIdPtr > (Dio_GroupChannels + DIO_CONFIGURED_GROUP_CHANNELS))){
         Det_ReportError(DIO_MODULE_ID, DIO_INSTANCE_ID,
                 DIO_READ_CHANNEL_GROUP_SID, DIO_E_PARAM_INVALID_GROUP);
         error = TRUE;
